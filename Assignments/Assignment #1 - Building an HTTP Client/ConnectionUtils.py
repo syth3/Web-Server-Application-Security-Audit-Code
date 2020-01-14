@@ -76,7 +76,7 @@ def connect_over_https(host, port):
         Socket to send and receive data with
     """
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
+    context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
     sock = context.wrap_socket(sock, server_hostname=host)
     sock.connect((host, port))
 
@@ -147,6 +147,7 @@ def craft_request(host):
     request += "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36\r\n"
     request += "Accept-Encoding: identity\r\n"
     request += "Connection: Close\r\n"
+    request += "SSL_PROTOCOL: TLSv1\r\n"
     request += "\r\n"
 
     return request
