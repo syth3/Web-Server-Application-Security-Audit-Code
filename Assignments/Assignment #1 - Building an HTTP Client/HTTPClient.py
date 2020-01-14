@@ -1,13 +1,44 @@
+'''
+file: HTTPClient.py
+language: python3
+author: Jacob Brown jmb7438@rit.edu
+description: HTTP Client that will take in a URL and print external links on the HTML page returned from the URL
+    Note: This code only uses the socket library for HTTP communication and basic string parsing libraries for
+          HTML parsing
+'''
+
 import sys
 import logging
 import ConnectionUtils
 
 
 def print_usage():
+    """Print the usage message of this script
+    
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    Nothing
+    """
     print("Usage: HTTPClient.py URL")
 
 
 def validate_url(url):
+    """Validate that a url scheme is either http or https
+    
+    Parameters
+    ----------
+    url : string
+        url to be validated
+    
+    Returns
+    -------
+    boolean
+        True if the url uses a valid scheme, False otherwise
+    """
     if "://" not in url:
         return False
     scheme_split = url.split("://")
@@ -25,10 +56,22 @@ def validate_url(url):
 
 
 def gather_input():
+    """Gather input from the command line and exit if input is incorrect
+    
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    string
+        Url received from command line argument
+    """
     if len(sys.argv) != 2:
         print("Error: Did not supply proper arguments")
         print_usage()
         logging.error("Did not supply proper arguments. Arguments supplied: " + str(sys.argv))
+        exit(1)
     url = sys.argv[1]
 
     if not validate_url(url):
@@ -36,10 +79,21 @@ def gather_input():
         print("Valid URL: <scheme>://<host>:<port>/[path]")
         print("Scheme must be http or https")
         logging.error("URL provided not valid: " + url)
+        exit(1)
     return url
 
 
 def configure_logger():
+    """Configure the logger
+    
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    Nothing
+    """
     logging.basicConfig(level=logging.DEBUG, filemode='a', format='%(asctime)s - [%(levelname)s] - %(message)s', filename='HTTPClient.log')
 
 
