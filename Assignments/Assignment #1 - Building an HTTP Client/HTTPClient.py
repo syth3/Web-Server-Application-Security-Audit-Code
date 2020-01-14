@@ -116,7 +116,7 @@ def main():
     configure_logger()
     url = gather_input()
     web_page = ConnectionUtils.get_page(url)
-    external_references = Parser.parse_page_for_external_references(web_page)
+    external_references = Parser.parse_web_page_for_external_references(web_page)
     print_external_references(external_references)
 
 
