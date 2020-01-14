@@ -10,6 +10,7 @@ description: HTTP Client that will take in a URL and print external links on the
 import sys
 import logging
 import ConnectionUtils
+import Parser
 
 
 def print_usage():
@@ -97,10 +98,26 @@ def configure_logger():
     logging.basicConfig(level=logging.DEBUG, filemode='a', format='%(asctime)s - [%(levelname)s] - %(message)s', filename='HTTPClient.log')
 
 
+def print_external_references(external_references):
+    """Prints external references passed in
+    
+    Parameters
+    ----------
+    external_references : list
+        external references to be printed
+
+    Returns
+    -------
+    Nothing
+    """
+    pass
+
 def main():
     configure_logger()
     url = gather_input()
-    ConnectionUtils.test()
+    web_page = ConnectionUtils.get_page(url)
+    external_references = Parser.parse_page_for_external_references(web_page)
+    print_external_references(external_references)
 
 
 main()
