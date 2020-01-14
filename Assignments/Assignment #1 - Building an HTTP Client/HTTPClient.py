@@ -8,6 +8,19 @@ def print_usage():
 
 
 def validate_url(url):
+    scheme_split = url.split("://")
+    if len(scheme_split) != 2:
+        print("len(scheme_split) not enough")
+        return False
+    
+    scheme = scheme_split[0]
+    if not(scheme == "http") and not (scheme == "https"):
+        print("scheme not http or https")
+        return False
+    
+    host_and_the_rest = scheme_split[1]
+    host_and_the_rest_split = host_and_the_rest.split("/")
+
     return True
 
 def gather_input():
