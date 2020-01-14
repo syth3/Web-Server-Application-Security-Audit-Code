@@ -78,7 +78,6 @@ def connect_over_https(host, port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
     sock = context.wrap_socket(sock, server_hostname=host)
-    print(host, port)
     sock.connect((host, port))
 
     return sock
@@ -180,6 +179,5 @@ def get_page(url):
     response = send_and_recieve_over_socket(sock, request)
     web_page = response.split("\r\n\r\n")[1].strip()
     sock.close()
-    print(web_page)
 
     return web_page
