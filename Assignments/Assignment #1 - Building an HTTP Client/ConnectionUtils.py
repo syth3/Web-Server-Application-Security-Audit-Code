@@ -26,7 +26,7 @@ def extract_port_and_host(scheme, url):
     """
     port = 0
     url_port_split = url.split(":")
-    host = url_port_split[0]
+    host = url_port_split[0].strip("/")
 
     if len(url_port_split) != 2:
         if scheme == "http":
@@ -78,6 +78,7 @@ def connect_over_https(host, port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
     sock = context.wrap_socket(sock, server_hostname=host)
+    print(host, port)
     sock.connect((host, port))
 
     return sock
