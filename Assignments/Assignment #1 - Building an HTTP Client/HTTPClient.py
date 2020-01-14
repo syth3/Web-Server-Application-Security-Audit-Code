@@ -28,17 +28,17 @@ def print_usage():
 
 
 def validate_url(url):
-    """Validate that a url scheme is either http or https
+    """Validate that a URL scheme is either http or https
     
     Parameters
     ----------
     url : string
-        url to be validated
+        URL to be validated
     
     Returns
     -------
     boolean
-        True if the url uses a valid scheme, False otherwise
+        True if the URL uses a valid scheme, False otherwise
     """
     if "://" not in url:
         return False
@@ -66,7 +66,7 @@ def gather_input():
     Returns
     -------
     string
-        Url received from command line argument
+        URL received from command line argument
     """
     if len(sys.argv) != 2:
         print("Error: Did not supply proper arguments")
@@ -76,7 +76,7 @@ def gather_input():
     url = sys.argv[1]
 
     if not validate_url(url):
-        print("Error: URL provided is not a valid url")
+        print("Error: URL provided is not a valid URL")
         print("Valid URL: <scheme>://<host>:<port>/[path]")
         print("Scheme must be http or https")
         logging.error("URL provided not valid: " + url)
@@ -104,7 +104,7 @@ def print_external_references(external_references):
     Parameters
     ----------
     external_references : list
-        external references to be printed
+        External references to be printed
 
     Returns
     -------
