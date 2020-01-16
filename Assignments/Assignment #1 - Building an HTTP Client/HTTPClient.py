@@ -50,7 +50,9 @@ def validate_url(url):
     if not(scheme == "http") and not (scheme == "https"):
         return False
     
-    # host_and_the_rest = scheme_split[1]
+    host_and_the_rest = scheme_split[1]
+    if "www" not in host_and_the_rest:
+        return False
     # host_and_the_rest_split = host_and_the_rest.split("/")
 
     return True
@@ -77,8 +79,8 @@ def gather_input():
 
     if not validate_url(url):
         print("Error: URL provided is not a valid URL")
-        print("Valid URL: <scheme>://<host>:<port>/[path]")
-        print("Scheme must be http or https")
+        print("Valid URL: <http/https>://<host>:[port]/[path]")
+        print("Note: Please include www if you did not")
         logging.error("URL provided not valid: " + url)
         exit(1)
     return url
@@ -98,26 +100,29 @@ def configure_logger():
     logging.basicConfig(level=logging.DEBUG, filemode='a', format='%(asctime)s - [%(levelname)s] - %(message)s', filename='HTTPClient.log')
 
 
-def print_external_references(external_references):
+def print_external_references(unique_external_references, unique_external_references_count, total_external_references_count):
     """Prints external references passed in
     
     Parameters
     ----------
-    external_references : list
+    unique_external_references : list
         External references to be printed
 
     Returns
     -------
     Nothing
     """
-    pass
+    for reference in unique_external_references:
+        print(reference)
+    print("Unique Links:", unique_external_references_count)
+    print("Total Links:", total_external_references_count)
 
 def main():
     configure_logger()
     url = gather_input()
     web_page = ConnectionUtils.get_page(url)
-    external_references = Parser.parse_web_page_for_external_references(web_page)
-    print_external_references(external_references)
+    unique_external_references, unique_external_references_count, total_external_references_count = Parser.parse_web_page_for_external_references(web_page)
+    print_external_references(unique_external_references, unique_external_references_count, total_external_references_count)
 
 
 main()
