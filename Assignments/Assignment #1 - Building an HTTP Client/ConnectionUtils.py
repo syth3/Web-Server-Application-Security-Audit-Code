@@ -97,7 +97,7 @@ def recv_allow_keyboard_interupt(sock):
         Data received by the socket
     """
     try:
-        data = sock.recv(8192).decode("ISO-8859-1")
+        data = sock.recv(8192).decode(encoding = "utf_8", errors = "ignore")
     except KeyboardInterrupt:
         pass
 
@@ -147,7 +147,7 @@ def craft_request(host):
     request += "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36\r\n"
     request += "Accept-Encoding: identity\r\n"
     request += "Connection: Close\r\n"
-    request += "SSL_PROTOCOL: TLSv1\r\n"
+    request += "SSL_PROTOCOL: TLSv1.2\r\n"
     request += "\r\n"
 
     return request
@@ -177,8 +177,14 @@ def get_page(url):
         sock = connect_over_https(host, url_port)
     
     request = craft_request(host)
+    # print(request)
     response = send_and_recieve_over_socket(sock, request)
+    # print(response)
+    response_first_line = response.split("\n")[0]
+    http_code = response_first_line.split(" ")[1]
+    # print(http_code)
+    response_headers = response.split("\r\n\r\n")[0].strip()
     web_page = response.split("\r\n\r\n")[1].strip()
     sock.close()
 
-    return web_page
+    return web_page, http_code, response_headers
