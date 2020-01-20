@@ -135,7 +135,6 @@ def parse_web_page_for_external_references(web_page):
     set
         Set of external references
     """
-    unique_url_count = 0
     unique_urls_set = set()
     attributes_of_interest = [
         "action", 
