@@ -163,8 +163,8 @@ def get_page(url):
     
     Returns
     -------
-    string
-        Web page grabbed from URL
+    string, int, string
+        Web page grabbed from URL, http response code, http response headers
     """
     url_scheme_split = url.split("://")
     url_scheme = url_scheme_split[0]
@@ -177,14 +177,12 @@ def get_page(url):
         sock = connect_over_https(host, url_port)
     
     request = craft_request(host)
-    # print(request)
     response = send_and_recieve_over_socket(sock, request)
-    # print(response)
     response_first_line = response.split("\n")[0]
     http_code = response_first_line.split(" ")[1]
-    # print(http_code)
     response_headers = response.split("\r\n\r\n")[0].strip()
     web_page = response.split("\r\n\r\n")[1].strip()
+    
     sock.close()
 
-    return web_page, http_code, response_headers
+    return web_page, int(http_code), response_headers

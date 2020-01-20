@@ -8,7 +8,6 @@ description: HTTP Client that will take in a URL and print external links on the
 '''
 
 import sys
-import logging
 import ConnectionUtils
 import Parser
 
@@ -28,7 +27,7 @@ def print_usage():
 
 
 def validate_url(url):
-    """Validate that a URL scheme is either http or https
+    """Validate that a URL has a scheme and that is either http or https
     
     Parameters
     ----------
@@ -49,8 +48,6 @@ def validate_url(url):
     scheme = scheme_split[0]
     if not(scheme == "http") and not (scheme == "https"):
         return False
-    
-    host_and_the_rest = scheme_split[1]
 
     return True
 
@@ -70,7 +67,6 @@ def gather_input():
     if len(sys.argv) != 2:
         print("Error: Did not supply proper arguments")
         print_usage()
-        logging.error("Did not supply proper arguments. Arguments supplied: " + str(sys.argv))
         exit(1)
     url = sys.argv[1]
 
@@ -78,26 +74,11 @@ def gather_input():
         print("Error: URL provided is not a valid URL")
         print("Valid URL: <http/https>://<host>:[port]/[path]")
         print("Note: Please include www if you did not")
-        logging.error("URL provided not valid: " + url)
         exit(1)
     return url
 
 
-def configure_logger():
-    """Configure the logger
-    
-    Parameters
-    ----------
-    None
-
-    Returns
-    -------
-    Nothing
-    """
-    logging.basicConfig(level=logging.DEBUG, filemode='a', format='%(asctime)s - [%(levelname)s] - %(message)s', filename='HTTPClient.log')
-
-
-def print_external_references(unique_external_references):
+def print_external_references(unique_external_references, original_url):
     """Prints external references passed in
     
     Parameters
@@ -111,15 +92,32 @@ def print_external_references(unique_external_references):
     """
     for reference in unique_external_references:
         # pass
-        print(reference)
+        if not(reference == original_url):
+            print(reference)
     print()
     print("**********************************************")
-    print("Unique External References Found:", len(unique_external_references))
+    if original_url in unique_external_references:
+        print("Unique External References Found:", len(unique_external_references) - 1)
+    else:
+        print("Unique External References Found:", len(unique_external_references))
     print("**********************************************")
     # print("Total Links:", total_external_references_count)
 
 
 def print_response_headers_and_exit(http_code, response_headers):
+    """Print the response headers and exit the program
+    
+    Parameters
+    ----------
+    http_code : int
+        HTTP code from the response
+    response_headers : string
+        Headers returned that will be printed
+    
+    Returns
+    -------
+    Nothing
+    """
     print("Problem encountered. See response headers below:")
     print()
     print(response_headers)
@@ -127,13 +125,13 @@ def print_response_headers_and_exit(http_code, response_headers):
 
 
 def main():
-    configure_logger()
     url = gather_input()
     web_page, http_code, response_headers = ConnectionUtils.get_page(url)
-    if int(http_code) != 200:
+    if not(http_code == 200):
+        print(type(http_code))
         print_response_headers_and_exit(http_code, response_headers)
     unique_external_references = Parser.parse_web_page_for_external_references(web_page)
-    print_external_references(unique_external_references)
+    print_external_references(unique_external_references, url)
 
 
 main()

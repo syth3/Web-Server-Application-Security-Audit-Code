@@ -7,6 +7,18 @@ description: Parses a web page using only string libraries. Used by HTTPClient.p
 
 
 def validate_url(url):
+    """Validate that the URL meets some basic criteria
+    
+    Parameters
+    ----------
+    url : string
+        URL to be validated
+    
+    Returns
+    -------
+    boolean
+        True if URL meets criteria, False otherwise
+    """
     if len(url) == 0:
         # print("\tLength of URL is zero")
         return False
@@ -21,6 +33,18 @@ def validate_url(url):
 
 
 def clean_url(url):
+    """Clean the URL given to just the scheme and host portion
+    
+    Parameters
+    ----------
+    url : string
+        URL to be cleaned
+    
+    Returns
+    -------
+    string
+        Cleaned URL
+    """
     url = url.replace("\\", "")
 
     # Grab data between first quote and last quote
@@ -38,11 +62,20 @@ def clean_url(url):
     if "://" in url:
         scheme = url.split("://")[0]
         everything_but_scheme = url.split("://")[1]
+    if len(scheme) > 5:
+        if "https" in scheme:
+            scheme = "https"
+        else:
+            scheme = "http"
 
+    # print("Before:", everything_but_scheme)
     if ":" in everything_but_scheme:
         everything_but_scheme = everything_but_scheme.split(":")[0]
-    else:
+    if "/" in everything_but_scheme:
+        # print("Splitting on /")
         everything_but_scheme = everything_but_scheme.split("/")[0]
+    if "?" in everything_but_scheme: 
+        everything_but_scheme = everything_but_scheme.split("?")[0]
 
     if len(scheme) == 0:
         url = everything_but_scheme
@@ -50,11 +83,25 @@ def clean_url(url):
         url = scheme + "://" + everything_but_scheme
     # print("Scheme:", scheme)
     # print("Everything but scheme:", everything_but_scheme)
+    
     return url
-    # return scheme + "://" + everything_but_scheme
 
 
 def extract_url(attribute, data):
+    """Extract a URL from the data given
+    
+    Parameters
+    ----------
+    attribute : string
+        Attribute being looked at
+    data : string
+        Data attached to the attribute tag given
+    
+    Returns
+    -------
+    list
+        List of URLs found
+    """
     urls_found = []
     for search_text in data.split(" "):
         if attribute + "=" in search_text:
@@ -85,8 +132,8 @@ def parse_web_page_for_external_references(web_page):
     
     Returns
     -------
-    list
-        list of external references
+    set
+        Set of external references
     """
     unique_url_count = 0
     unique_urls_set = set()
