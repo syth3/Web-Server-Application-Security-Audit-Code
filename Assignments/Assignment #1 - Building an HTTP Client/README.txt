@@ -9,4 +9,4 @@ How to run my code
 
 Note: 
  - In Windows, you may need to substitute "python3" for "python" in the terminal command
- - Please include both the http and www portion of the url
+ - Please include the http portion of the url
