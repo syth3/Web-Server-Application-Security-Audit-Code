@@ -142,8 +142,8 @@ def verify_header(header):
     int
         1 if "Host" header is found, 0 otherwise
     """
-    if header.count(':') != 1:
-        Response_Codes.respond_with_400()
+    # if header.count(':') != 1:
+    #     Response_Codes.respond_with_400()
     header = header.replace(" ", "")
     key = header.split(":")[0]
 
