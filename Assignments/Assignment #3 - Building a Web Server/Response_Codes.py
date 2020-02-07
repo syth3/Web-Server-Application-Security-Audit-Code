@@ -6,7 +6,7 @@ description: Response code functions used by HTTP_Parser.py
 '''
 
 def respond_with_200():
-    """Print a HTTP 1.1 200 OK message and exit
+    """Return a HTTP 1.1 200 OK message and exit
     
     Parameters
     ----------
@@ -16,12 +16,25 @@ def respond_with_200():
     -------
     Nothing
     """
-    print("HTTP/1.1 200 OK\r\n\r\n")
-    exit(0)
+    return "HTTP/1.1 200 OK\r\n\r\n"
+
+
+def respond_with_201():
+    """Return a HTTP 1.1 201 Created message and exit
+    
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    Nothing
+    """
+    return "HTTP/1.1 200 Created\r\n\r\n"
 
 
 def respond_with_400():
-    """Print a HTTP 1.1 400 BAD REQUEST message and exit
+    """Return a HTTP 1.1 400 Bad Request message and exit
     
     Parameters
     ----------
@@ -31,12 +44,53 @@ def respond_with_400():
     -------
     Nothing
     """
-    print("HTTP/1.1 400 BAD REQUEST\r\n\r\n")
-    exit(1)
+    return "HTTP/1.1 400 Bad Request\r\n\r\n"
+
+
+def respond_with_403():
+    """Return a HTTP 1.1 403 Forbidden message and exit
+    
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    Nothing
+    """
+    return "HTTP/1.1 400 Forbidden\r\n\r\n"
+
+
+def respond_with_404():
+    """Return a HTTP 1.1 404 Not Found message and exit
+    
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    Nothing
+    """
+    return "HTTP/1.1 404 Not Found\r\n\r\n"
+
+
+def respond_with_411():
+    """Return a HTTP 1.1 411 Length Required message and exit
+    
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    Nothing
+    """
+    return "HTTP/1.1 411 Length Required\r\n\r\n"
 
 
 def respond_with_500():
-    """Print a HTTP 1.1 500 INTERNAL SERVER ERROR message and exit
+    """Return a HTTP 1.1 500 INTERNAL SERVER ERROR message and exit
     
     Parameters
     ----------
@@ -46,6 +100,32 @@ def respond_with_500():
     -------
     Nothing
     """
-    print("HTTP/1.1 500 INTERNAL SERVER ERROR\r\n\r\n")
-    exit(2)
+    return "HTTP/1.1 500 INTERNAL SERVER ERROR\r\n\r\n"
     
+
+def respond_with_501():
+    """Return a HTTP 1.1 501 Not Implemented message and exit
+    
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    Nothing
+    """
+    return "HTTP/1.1 501 Not Implemented\r\n\r\n"
+
+
+def respond_with_505():
+    """Return a HTTP 1.1 505 HTTP Version Not Supported message and exit
+    
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    Nothing
+    """
+    return "HTTP/1.1 505 HTTP Version Not Supported\r\n\r\n"
