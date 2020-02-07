@@ -209,4 +209,5 @@ def main():
         Response_Codes.respond_with_500()
 
     
-main()
+if __name__ == "__main__":
+    main()
