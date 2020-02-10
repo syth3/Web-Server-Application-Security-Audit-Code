@@ -85,7 +85,7 @@ def verify_request_uri(request_uri):
     -------
     Nothing
     """
-    PARSED_REQUEST["request-uri"] = request_uri
+    PARSED_REQUEST["request_uri"] = request_uri
 
 
 def verify_http_version(http_version):
@@ -103,7 +103,7 @@ def verify_http_version(http_version):
     if http_version != "HTTP/1.1" and http_version != "HTTP/1.0":
         PARSED_REQUEST["response_code"] = 505
     else:
-        PARSED_REQUEST["http-version"] = http_version
+        PARSED_REQUEST["http_version"] = http_version
 
 
 def verify_request_line(request_line):
@@ -175,13 +175,14 @@ def verify_headers(headers):
     for header in headers:
         verify_header(header)
 
-    count = 0
-    for header in PARSED_REQUEST["headers"]:
-        if header[0].lower() == "host":
-            count += 1
+    if PARSED_REQUEST["http_version"] == "HTTP/1.1":
+        count = 0
+        for header in PARSED_REQUEST["headers"]:
+            if header[0].lower() == "host":
+                count += 1
 
-    if count != 1:
-        PARSED_REQUEST["response_code"] = 400
+        if count != 1:
+            PARSED_REQUEST["response_code"] = 400
 
 
 def parse_request(request):

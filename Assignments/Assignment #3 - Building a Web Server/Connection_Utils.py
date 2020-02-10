@@ -12,17 +12,18 @@ NUM_CONCURRENT_CONNECTIONS = 5
 def handler(sock):
     # Process all request methods
     response = ""
-    try:
-        request = get_request(sock)
-        parsed_request = HTTP_Parser.parse_request(request)
-        HTTP_Parser.print_parsed_request(parsed_request)
+    # try:
+    request = get_request(sock)
+    parsed_request = HTTP_Parser.parse_request(request)
+    HTTP_Parser.print_parsed_request(parsed_request)
 
-        if parsed_request["response_code"] != 200:
-            response = return_http_code(parsed_request["response_code"])
-        else:
-            response = execute_method(parsed_request["method"])
-    except Exception:
-        response = Response_Codes.respond_with_500()
+    if parsed_request["response_code"] != 200:
+        response = return_http_code(parsed_request["response_code"])
+    else:
+        response = execute_method(parsed_request)
+    # except Exception as e:
+    #     print(e)
+    #     response = Response_Codes.respond_with_500()
 
     sock.send(response.encode())
     sock.close()
@@ -37,18 +38,19 @@ def return_http_code(response_code):
         return Response_Codes.respond_with_505()
 
 
-def execute_method(method):
+def execute_method(parsed_request):
     response = ""
+    method = parsed_request["method"]
     if method == "GET":
-        response = Process_Request_Methods.process_GET()
+        response = Process_Request_Methods.process_GET(parsed_request)
     elif method == "POST":
-        response = Process_Request_Methods.process_POST()
+        response = Process_Request_Methods.process_POST(parsed_request)
     elif method == "PUT":
-        response = Process_Request_Methods.process_PUT()
+        response = Process_Request_Methods.process_PUT(parsed_request)
     elif method == "DELETE":
-        response = Process_Request_Methods.process_DELETE()
+        response = Process_Request_Methods.process_DELETE(parsed_request)
     elif method == "HEAD":
-        response = Process_Request_Methods.process_HEAD()
+        response = Process_Request_Methods.process_HEAD(parsed_request)
     
     return response
     

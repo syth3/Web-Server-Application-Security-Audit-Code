@@ -5,7 +5,7 @@ author: Jacob Brown jmb7438@rit.edu
 description: Response code functions used by HTTP_Parser.py
 '''
 
-def respond_with_200():
+def respond_with_200(body):
     """Return a HTTP 1.1 200 OK message and exit
     
     Parameters
@@ -16,12 +16,13 @@ def respond_with_200():
     -------
     Nothing
     """
-    response = "HTTP/1.1 200 OK\r\n\r\n"
-    response += "I can see you!\r\n"
+    response = "HTTP/1.1 200 OK\r\n"
+    response += "\r\n"
+    response += body
     return response
 
 
-def respond_with_201():
+def respond_with_201(body):
     """Return a HTTP 1.1 201 Created message and exit
     
     Parameters
