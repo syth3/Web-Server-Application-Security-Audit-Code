@@ -22,7 +22,7 @@ def respond_with_200(body):
     return response
 
 
-def respond_with_201(body):
+def respond_with_201(body, location):
     """Return a HTTP 1.1 201 Created message and exit
     
     Parameters
@@ -33,7 +33,11 @@ def respond_with_201(body):
     -------
     Nothing
     """
-    return "HTTP/1.1 200 Created\r\n\r\n"
+    response = "HTTP/1.1 200 Created\r\n"
+    response += "Content-Location: " + location + "\r\n"
+    response += "\r\n"
+    response += body
+    return response
 
 
 def respond_with_400():

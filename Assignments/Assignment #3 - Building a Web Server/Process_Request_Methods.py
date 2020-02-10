@@ -37,7 +37,16 @@ def process_POST(parsed_request):
 
 
 def process_PUT(parsed_request):
-    return Response_Codes.respond_with_200("")
+    curr_dir = Path.cwd()
+    file_name = Path(parsed_request["request_uri"])
+    path = curr_dir / "Files"
+    path = Path(str(path) + str(file_name))
+    print(str(path))
+    
+    body = parsed_request["body"]
+    path.write_text(body)
+
+    return Response_Codes.respond_with_201(body, str(file_name))
 
 
 def process_DELETE(parsed_request):
