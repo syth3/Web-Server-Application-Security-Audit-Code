@@ -66,7 +66,7 @@ def verify_method(method):
     ]
 
     if method.upper() not in allowed_methods:
-        PARSED_REQUEST["syntax"] = "verify_method invalid"
+        PARSED_REQUEST["response_code"] = 501
     else:
         PARSED_REQUEST["method"] = method.upper()
 
@@ -100,8 +100,8 @@ def verify_http_version(http_version):
     -------
     Nothing
     """
-    if http_version != "HTTP/1.1":
-        PARSED_REQUEST["syntax"] = "verify_http_version invalid"
+    if http_version != "HTTP/1.1" or http_version != "HTTP/1.0":
+        PARSED_REQUEST["response_code"] = 505
     else:
         PARSED_REQUEST["http-version"] = http_version
 
@@ -121,7 +121,7 @@ def verify_request_line(request_line):
     Nothing
     """
     if request_line.count(" ") != 2:
-        PARSED_REQUEST["syntax"] = "verify_request_line invalid"
+        PARSED_REQUEST["response_code"] = 400
     
     split_request_line = request_line.split(" ")
     method = split_request_line[0]
@@ -147,11 +147,14 @@ def verify_header(header):
     UPDATE
     """
     header = header.replace(" ", "")
-    header_split = header.split(":")
-    header_name = header_split[0]
-    header_value = ""
-    for element in header_split[1:]:
-        header_value += element
+    # header_split = header.split(":")
+    # header_name = header_split[0]
+    # header_value = ""
+    # for element in header_split[1:]:
+    #     header_value += element
+    first_colon_location = header.find(":")
+    header_name = header[0:first_colon_location]
+    header_value = header[first_colon_location+1:]
 
     header_tuple = (header_name, header_value)
     PARSED_REQUEST["headers"].append(header_tuple)
@@ -178,10 +181,10 @@ def verify_headers(headers):
             count += 1
 
     if count != 1:
-        PARSED_REQUEST["syntax"] = "verify_headers invalid"
+        PARSED_REQUEST["response_code"] = 400
 
 
-def parse_request(request_str):
+def parse_request(request):
     """Parse a HTTP request and check for syntax. If syntax is correct, respond with a 400 HTTP code.
     Otherwise, respond with a 200 HTTP code.
     
@@ -194,14 +197,14 @@ def parse_request(request_str):
     -------
     Nothing
     """
-    PARSED_REQUEST["syntax"] = "valid"
-
+    PARSED_REQUEST["response_code"] = 200
+    request_str = request[2:-1]
     # request_str = ""
     # for line in request:
     #     request_str += str(line)[2:-1]
 
     if request_str.count("\\r\\n\\r\\n") != 1:
-        PARSED_REQUEST["syntax"] = "parse_request invalid"
+        PARSED_REQUEST["response_code"] = 400
     
     request_line_and_headers = request_str.split("\\r\\n\\r\\n")[0]
 
@@ -219,7 +222,7 @@ def print_parsed_request(parsed_request):
         if key == "headers":
             print("headers:")
             for header in parsed_request[key]:
-                print("  - " + header[0] + ":" + header[1])
+                print("  - " + header[0] + ": " + header[1])
         else:
             print(key + " -> " + str(parsed_request[key]))
 
