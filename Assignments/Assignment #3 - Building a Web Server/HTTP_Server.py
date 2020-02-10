@@ -1,6 +1,7 @@
 import sys
 import logging
 from pathlib import Path
+import Connection_Utils
 
 
 def print_usage():
@@ -35,8 +36,8 @@ def gather_input():
     if len(sys.argv) == 3:
         ip_address = sys.argv[1]
         port = sys.argv[2]
-        arg_dict["ip address"] = ip_address
-        arg_dict["port"] = port
+        arg_dict["ip_address"] = ip_address
+        arg_dict["port"] = int(port)
         arg_dict["scheme"] = "http"
     # HTTPS connection
     elif len(sys.argv) == 5:
@@ -50,8 +51,8 @@ def gather_input():
         if not(x509_private_key_path.exists()):
             print_usage()
             exit(1)
-        arg_dict["ip address"] = ip_address
-        arg_dict["port"] = port
+        arg_dict["ip_address"] = ip_address
+        arg_dict["port"] = int(port)
         arg_dict["x509_path"] = x509_path
         arg_dict["x509_private_key_path"] = x509_private_key_path
         arg_dict["scheme"] = "https"
@@ -73,7 +74,7 @@ def log_data(ip_address, first_line_of_request):
 def main():
     args = gather_input()
     configure_logger()
-    
+    Connection_Utils.start_server(args)
 
 
 main()

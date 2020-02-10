@@ -100,7 +100,7 @@ def verify_http_version(http_version):
     -------
     Nothing
     """
-    if http_version != "HTTP/1.1" or http_version != "HTTP/1.0":
+    if http_version != "HTTP/1.1" and http_version != "HTTP/1.0":
         PARSED_REQUEST["response_code"] = 505
     else:
         PARSED_REQUEST["http-version"] = http_version
@@ -199,9 +199,12 @@ def parse_request(request):
     """
     PARSED_REQUEST["response_code"] = 200
     request_str = request[2:-1]
+
+    ###### For Testing ######
     # request_str = ""
     # for line in request:
     #     request_str += str(line)[2:-1]
+    #########################
 
     if request_str.count("\\r\\n\\r\\n") != 1:
         PARSED_REQUEST["response_code"] = 400

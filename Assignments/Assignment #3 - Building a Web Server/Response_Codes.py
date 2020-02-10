@@ -16,7 +16,9 @@ def respond_with_200():
     -------
     Nothing
     """
-    return "HTTP/1.1 200 OK\r\n\r\n"
+    response = "HTTP/1.1 200 OK\r\n\r\n"
+    response += "I can see you!\r\n"
+    return response
 
 
 def respond_with_201():
