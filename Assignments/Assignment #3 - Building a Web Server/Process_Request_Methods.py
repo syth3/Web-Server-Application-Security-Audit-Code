@@ -19,6 +19,16 @@ def process_GET(parsed_request):
 
 
 def process_POST(parsed_request):
+    # Check that the Content-Length header is present
+    found_content_length = False
+    for header in parsed_request["headers"]:
+        if header[0].lower() == "content-length":
+            found_content_length = True
+
+    if not found_content_length:
+        return Response_Codes.respond_with_411()
+
+    #Process POST request
     curr_dir = Path.cwd()
     file_name = Path(parsed_request["request_uri"])
     path = curr_dir / "Resources"
@@ -41,7 +51,6 @@ def process_PUT(parsed_request):
     file_name = Path(parsed_request["request_uri"])
     path = curr_dir / "Files"
     path = Path(str(path) + str(file_name))
-    print(str(path))
     
     body = parsed_request["body"]
     path.write_text(body)
@@ -50,6 +59,13 @@ def process_PUT(parsed_request):
 
 
 def process_DELETE(parsed_request):
+    curr_dir = Path.cwd()
+    file_name = Path(parsed_request["request_uri"])
+    path = curr_dir / "Files"
+    path = Path(str(path) + str(file_name))
+
+    path.unlink()
+
     return Response_Codes.respond_with_200("")
 
 

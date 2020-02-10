@@ -51,7 +51,11 @@ def respond_with_400():
     -------
     Nothing
     """
-    return "HTTP/1.1 400 Bad Request\r\n\r\n"
+    response = "HTTP/1.1 400 Bad Request\r\n
+    response + "\r\n"
+    response += "Bad Request"
+    response += "\r\n"
+    return response
 
 
 def respond_with_403():
@@ -65,7 +69,11 @@ def respond_with_403():
     -------
     Nothing
     """
-    return "HTTP/1.1 400 Forbidden\r\n\r\n"
+    response = "HTTP/1.1 400 Forbidden\r\n
+    response + "\r\n"
+    response += "Forbidden"
+    response += "\r\n"
+    return response
 
 
 def respond_with_404():
@@ -79,7 +87,11 @@ def respond_with_404():
     -------
     Nothing
     """
-    return "HTTP/1.1 404 Not Found\r\n\r\n"
+    response = "HTTP/1.1 404 Not Found\r\n
+    response + "\r\n"
+    response += "Not Found"
+    response += "\r\n"
+    return response
 
 
 def respond_with_411():
@@ -93,7 +105,11 @@ def respond_with_411():
     -------
     Nothing
     """
-    return "HTTP/1.1 411 Length Required\r\n\r\n"
+    response = "HTTP/1.1 411 Length Required\r\n
+    response + "\r\n"
+    response += "Length Required"
+    response += "\r\n"
+    return response
 
 
 def respond_with_500():
@@ -107,7 +123,11 @@ def respond_with_500():
     -------
     Nothing
     """
-    return "HTTP/1.1 500 INTERNAL SERVER ERROR\r\n\r\n"
+    response = "HTTP/1.1 500 Internal Server Error\r\n
+    response + "\r\n"
+    response += "Internal Server Error"
+    response += "\r\n"
+    return response
     
 
 def respond_with_501():
@@ -121,7 +141,11 @@ def respond_with_501():
     -------
     Nothing
     """
-    return "HTTP/1.1 501 Not Implemented\r\n\r\n"
+    response = "HTTP/1.1 501 Not Implemented\r\n
+    response + "\r\n"
+    response += "Not Implemented"
+    response += "\r\n"
+    return response
 
 
 def respond_with_505():
@@ -135,4 +159,8 @@ def respond_with_505():
     -------
     Nothing
     """
-    return "HTTP/1.1 505 HTTP Version Not Supported\r\n\r\n"
+    response = "HTTP/1.1 505 HTTP Version Not Supported\r\n
+    response + "\r\n"
+    response += "HTTP Version Not Supported"
+    response += "\r\n"
+    return response
