@@ -6,7 +6,9 @@ description: HTTP parser that verifies the syntax of a HTTP request
 '''
 
 import sys
-import Response_Codes
+
+
+PARSED_REQUEST = {}
 
 
 def print_usage():
@@ -60,12 +62,13 @@ def verify_method(method):
         "POST",
         "PUT",
         "DELETE",
-        "CONNECT",
         "HEAD"
     ]
 
     if method.upper() not in allowed_methods:
-        Response_Codes.respond_with_400()
+        PARSED_REQUEST["syntax"] = "verify_method invalid"
+    else:
+        PARSED_REQUEST["method"] = method.upper()
 
 
 def verify_request_uri(request_uri):
@@ -82,7 +85,7 @@ def verify_request_uri(request_uri):
     -------
     Nothing
     """
-    pass
+    PARSED_REQUEST["request-uri"] = request_uri
 
 
 def verify_http_version(http_version):
@@ -98,7 +101,9 @@ def verify_http_version(http_version):
     Nothing
     """
     if http_version != "HTTP/1.1":
-        Response_Codes.respond_with_400()
+        PARSED_REQUEST["syntax"] = "verify_http_version invalid"
+    else:
+        PARSED_REQUEST["http-version"] = http_version
 
 
 def verify_request_line(request_line):
@@ -116,7 +121,7 @@ def verify_request_line(request_line):
     Nothing
     """
     if request_line.count(" ") != 2:
-        Response_Codes.respond_with_400()
+        PARSED_REQUEST["syntax"] = "verify_request_line invalid"
     
     split_request_line = request_line.split(" ")
     method = split_request_line[0]
@@ -139,17 +144,17 @@ def verify_header(header):
     
     Returns
     -------
-    int
-        1 if "Host" header is found, 0 otherwise
+    UPDATE
     """
-    # if header.count(':') != 1:
-    #     Response_Codes.respond_with_400()
     header = header.replace(" ", "")
-    key = header.split(":")[0]
+    header_split = header.split(":")
+    header_name = header_split[0]
+    header_value = ""
+    for element in header_split[1:]:
+        header_value += element
 
-    if key.lower() == "host":
-        return 1
-    return 0
+    header_tuple = (header_name, header_value)
+    PARSED_REQUEST["headers"].append(header_tuple)
 
 def verify_headers(headers):
     """Verify that all headers are syntaxually correct and that the "Host" header is included
@@ -163,14 +168,20 @@ def verify_headers(headers):
     -------
     Nothing
     """
-    count = 0
+    PARSED_REQUEST["headers"] = []
     for header in headers:
-        count += verify_header(header)
+        verify_header(header)
+
+    count = 0
+    for header in PARSED_REQUEST["headers"]:
+        if header[0].lower() == "host":
+            count += 1
+
     if count != 1:
-        Response_Codes.respond_with_400()
+        PARSED_REQUEST["syntax"] = "verify_headers invalid"
 
 
-def parse_request(request):
+def parse_request(request_str):
     """Parse a HTTP request and check for syntax. If syntax is correct, respond with a 400 HTTP code.
     Otherwise, respond with a 200 HTTP code.
     
@@ -183,12 +194,14 @@ def parse_request(request):
     -------
     Nothing
     """
-    request_str = ""
-    for line in request:
-        request_str += str(line)[2:-1]
+    PARSED_REQUEST["syntax"] = "valid"
+
+    # request_str = ""
+    # for line in request:
+    #     request_str += str(line)[2:-1]
 
     if request_str.count("\\r\\n\\r\\n") != 1:
-        Response_Codes.respond_with_400()
+        PARSED_REQUEST["syntax"] = "parse_request invalid"
     
     request_line_and_headers = request_str.split("\\r\\n\\r\\n")[0]
 
@@ -198,16 +211,24 @@ def parse_request(request):
     request_headers = request_line_and_headers.split("\\r\\n")[1:]
     verify_headers(request_headers)
 
-    Response_Codes.respond_with_200()
-    
+    return PARSED_REQUEST
+
+
+def print_parsed_request(parsed_request):
+    for key in parsed_request.keys():
+        if key == "headers":
+            print("headers:")
+            for header in parsed_request[key]:
+                print("  - " + header[0] + ":" + header[1])
+        else:
+            print(key + " -> " + str(parsed_request[key]))
+
 
 def main():
-    try:
-        http_file = gather_input()
-        parse_request(http_file)
-    except Exception:
-        Response_Codes.respond_with_500()
-
+    parsed_request = {}
+    http_file = gather_input()
+    parsed_request = parse_request(http_file)
+    print_parsed_request(parsed_request)
     
 if __name__ == "__main__":
     main()
