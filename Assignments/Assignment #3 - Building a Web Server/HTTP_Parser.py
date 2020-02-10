@@ -211,6 +211,8 @@ def parse_request(request):
         PARSED_REQUEST["response_code"] = 400
     
     request_line_and_headers = request_str.split("\\r\\n\\r\\n")[0]
+    request_body = request_str.split("\\r\\n\\r\\n")[1]
+    PARSED_REQUEST["body"] = request_body
 
     request_line = request_line_and_headers.split("\\r\\n")[0]
     verify_request_line(request_line)
