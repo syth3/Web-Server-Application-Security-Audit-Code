@@ -49,7 +49,7 @@ def process_POST(parsed_request):
 def process_PUT(parsed_request):
     curr_dir = Path.cwd()
     file_name = Path(parsed_request["request_uri"])
-    path = curr_dir / "Files"
+    path = curr_dir / "Resources"
     path = Path(str(path) + str(file_name))
     
     body = parsed_request["body"]
@@ -61,12 +61,15 @@ def process_PUT(parsed_request):
 def process_DELETE(parsed_request):
     curr_dir = Path.cwd()
     file_name = Path(parsed_request["request_uri"])
-    path = curr_dir / "Files"
+    path = curr_dir / "Resources"
     path = Path(str(path) + str(file_name))
+
+    if not path.exists():
+        return Response_Codes.respond_with_404()
 
     path.unlink()
 
-    return Response_Codes.respond_with_200("")
+    return Response_Codes.respond_with_200("Deleted Successfully")
 
 
 def process_HEAD(parsed_request):
