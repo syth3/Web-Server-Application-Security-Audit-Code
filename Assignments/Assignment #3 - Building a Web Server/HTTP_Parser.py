@@ -224,6 +224,13 @@ def parse_request(request):
 
 
 def print_parsed_request(parsed_request):
+    """Print the parsed request
+    
+    Parameters
+    ----------
+    parsed_request : dict
+        Dictionary of the HTTP request parsed
+    """
     for key in parsed_request.keys():
         if key == "headers":
             print("headers:")

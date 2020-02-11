@@ -2,14 +2,14 @@
 file: Response_Codes.py
 language: python3
 author: Jacob Brown jmb7438@rit.edu
-description: Response code functions used by HTTP_Parser.py
+description: Response code functions
 '''
 
 from datetime import datetime
 
 
 def respond_with_200(body):
-    """Return a HTTP 1.1 200 OK message and exit
+    """Return a HTTP 1.1 200 OK message
     
     Parameters
     ----------
@@ -27,7 +27,7 @@ def respond_with_200(body):
 
 
 def respond_with_201(body, location):
-    """Return a HTTP 1.1 201 Created message and exit
+    """Return a HTTP 1.1 201 Created message
     
     Parameters
     ----------
@@ -45,7 +45,7 @@ def respond_with_201(body, location):
 
 
 def respond_with_400():
-    """Return a HTTP 1.1 400 Bad Request message and exit
+    """Return a HTTP 1.1 400 Bad Request message
     
     Parameters
     ----------
@@ -63,7 +63,7 @@ def respond_with_400():
 
 
 def respond_with_403():
-    """Return a HTTP 1.1 403 Forbidden message and exit
+    """Return a HTTP 1.1 403 Forbidden message
     
     Parameters
     ----------
@@ -81,7 +81,7 @@ def respond_with_403():
 
 
 def respond_with_404():
-    """Return a HTTP 1.1 404 Not Found message and exit
+    """Return a HTTP 1.1 404 Not Found message
     
     Parameters
     ----------
@@ -99,7 +99,7 @@ def respond_with_404():
 
 
 def respond_with_411():
-    """Return a HTTP 1.1 411 Length Required message and exit
+    """Return a HTTP 1.1 411 Length Required message
     
     Parameters
     ----------
@@ -117,7 +117,7 @@ def respond_with_411():
 
 
 def respond_with_500():
-    """Return a HTTP 1.1 500 INTERNAL SERVER ERROR message and exit
+    """Return a HTTP 1.1 500 INTERNAL SERVER ERROR message
     
     Parameters
     ----------
@@ -135,7 +135,7 @@ def respond_with_500():
     
 
 def respond_with_501():
-    """Return a HTTP 1.1 501 Not Implemented message and exit
+    """Return a HTTP 1.1 501 Not Implemented message
     
     Parameters
     ----------
@@ -153,7 +153,7 @@ def respond_with_501():
 
 
 def respond_with_505():
-    """Return a HTTP 1.1 505 HTTP Version Not Supported message and exit
+    """Return a HTTP 1.1 505 HTTP Version Not Supported message
     
     Parameters
     ----------

@@ -1,7 +1,15 @@
+'''
+file: HTTP_Server.py
+language: python3
+author: Jacob Brown jmb7438@rit.edu
+description: Start a HTTP server
+'''
+
 import sys
 import logging
 from pathlib import Path
 import Connection_Utils
+import Response_Codes
 
 
 def print_usage():
@@ -15,7 +23,7 @@ def print_usage():
     -------
     Nothing
     """
-    print("Usage: HTTP_Server.py ip_address port x509_path x509_private_key_path")
+    print("Usage: HTTP_Server.py ip_address port [x509_path x509_private_key_path]")
 
 
 def gather_input():
@@ -64,17 +72,12 @@ def gather_input():
     return arg_dict
 
 
-def configure_logger():
-    logging.basicConfig(level=logging.DEBUG, filename='HTTP Server Log.txt', filemode='a', format='%(asctime)s - %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
-
-
-def log_data(ip_address, first_line_of_request):
-    logging.info(ip_address + " " + first_line_of_request)
-
 def main():
     args = gather_input()
-    configure_logger()
-    Connection_Utils.start_server(args)
+    try:
+        Connection_Utils.start_server(args)
+    except Exception:
+        Response_Codes.respond_with_500()
 
 
 main()
