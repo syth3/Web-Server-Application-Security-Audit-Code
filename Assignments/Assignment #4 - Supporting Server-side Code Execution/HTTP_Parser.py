@@ -66,9 +66,9 @@ def verify_method(method, parsed_request):
     ]
 
     if method.upper() not in allowed_methods:
-        parsed_request.response_code = 501
+        parsed_request.set_response_code(501)
     else:
-        parsed_request.method = method.upper()
+        parsed_request.set_method(method.upper())
 
 
 def verify_request_uri(request_uri, parsed_request):
@@ -87,7 +87,7 @@ def verify_request_uri(request_uri, parsed_request):
     -------
     Nothing
     """
-    parsed_request.request_uri = request_uri
+    parsed_request.set_request_uri(request_uri)
 
 
 def verify_http_version(http_version, parsed_request):
@@ -105,9 +105,9 @@ def verify_http_version(http_version, parsed_request):
     Nothing
     """
     if http_version != "HTTP/1.1" and http_version != "HTTP/1.0":
-        parsed_request.response_code = 505
+        parsed_request.set_response_code(505)
     else:
-        parsed_request.http_version = http_version
+        parsed_request.set_http_version(http_version)
 
 
 def verify_request_line(request_line, parsed_request):
@@ -127,7 +127,7 @@ def verify_request_line(request_line, parsed_request):
     Nothing
     """
     if request_line.count(" ") != 2:
-        parsed_request.response_code = 400
+        parsed_request.set_response_code(400)
     
     split_request_line = request_line.split(" ")
     method = split_request_line[0]
@@ -159,7 +159,7 @@ def verify_header(header, parsed_request):
     header_name = header[0:first_colon_location]
     header_value = header[first_colon_location+1:]
 
-    parsed_request.add_header(header_name, header_value)
+    parsed_request.set_header(header_name, header_value)
 
 
 def verify_headers(headers, parsed_request):
@@ -179,14 +179,14 @@ def verify_headers(headers, parsed_request):
     for header in headers:
         verify_header(header, parsed_request)
 
-    if parsed_request.http_version == "HTTP/1.1":
+    if parsed_request.get_http_version() == "HTTP/1.1":
         count = 0
-        for header in parsed_request.headers:
+        for header in parsed_request.get_headers():
             if header[0].lower() == "host":
                 count += 1
 
         if count != 1:
-            parsed_request.response_code = 400
+            parsed_request.set_response_code(400)
 
 
 def parse_request(request):
@@ -205,12 +205,12 @@ def parse_request(request):
     parsed_request = Parsed_Request.Parsed_Request()
 
     if request.count("\\r\\n\\r\\n") != 1:
-        parsed_request.response_code = 400
+        parsed_request.set_response_code(400)
         return parsed_request
 
     request_line_and_headers = request.split("\\r\\n\\r\\n")[0]
     request_body = request.split("\\r\\n\\r\\n")[1]
-    parsed_request.body = request_body
+    parsed_request.set_body(request_body)
 
     request_line = request_line_and_headers.split("\\r\\n")[0]
     verify_request_line(request_line, parsed_request)
