@@ -92,7 +92,7 @@ def respond_with_404():
     Nothing
     """
     response = "HTTP/1.1 404 Not Found\r\n"
-    response + "\r\n"
+    response += "\r\n"
     response += "Not Found"
     response += "\r\n"
     return response

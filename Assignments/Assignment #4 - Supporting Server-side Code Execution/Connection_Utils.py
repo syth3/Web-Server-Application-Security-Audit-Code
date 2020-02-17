@@ -9,6 +9,7 @@ import socket
 import ssl
 import threading
 import Handler
+import Response_Codes
 
 
 NUM_CONCURRENT_CONNECTIONS = 5
@@ -39,14 +40,14 @@ def start_server(input_args):
         Object representing all the input arguments
     """
     srv_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    srv_sock.bind((input_args.ip_address, input_args.port))
+    srv_sock.bind((input_args.get_ip_address(), input_args.get_port()))
     srv_sock.listen(NUM_CONCURRENT_CONNECTIONS)
 
     while True:
         conn_sock, addr = srv_sock.accept()
-        # conn_sock.send(Response_Codes.respond_with_200().encode())
-        if input_args.scheme == "https":
-            conn_sock = create_tls_socket(conn_sock, input_args.x509_path, input_args.x509_private_key_path)
+        # conn_sock.send(Response_Codes.respond_with_200("").encode())
+        if input_args.get_scheme() == "https":
+            conn_sock = create_tls_socket(conn_sock, input_args.get_x509_path(), input_args.get_x509_private_key_path())
         t = threading.Thread(target=Handler.handler, args=(conn_sock,))
         t.start()
 

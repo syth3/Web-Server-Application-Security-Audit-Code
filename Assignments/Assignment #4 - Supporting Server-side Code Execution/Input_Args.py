@@ -1,5 +1,4 @@
 from pathlib import Path
-import HTTP_Server
 
 
 class Input_Args:
@@ -37,9 +36,7 @@ class Input_Args:
     def set_x509_path(self, x509_path):
         pathlib_x509_path = Path(x509_path)
         if not(pathlib_x509_path.exists()):
-            self._x509_path = ""
-            HTTP_Server.print_usage()
-            exit(1)
+            self._x509_path = "invalid"
         else:
             self._x509_path = x509_path
     
@@ -51,9 +48,7 @@ class Input_Args:
     def set_x509_private_key_path(self, x509_private_key_path):
         pathlib_x509_private_key_path = Path(x509_private_key_path)
         if not(pathlib_x509_private_key_path.exists()):
-            self._x509_private_key_path = ""
-            HTTP_Server.print_usage()
-            exit(1)
+            self._x509_private_key_path = "invalid"
         else:
             self._x509_private_key_path = x509_private_key_path
 

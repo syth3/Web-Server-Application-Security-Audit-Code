@@ -24,7 +24,8 @@ def print_usage():
     -------
     Nothing
     """
-    print("Usage: HTTP_Server.py ip_address port [x509_path x509_private_key_path]")
+    # print("Usage: HTTP_Server.py ip_address port [x509_path x509_private_key_path]")
+    print("Usage: HTTP_Server.py ip_address port")
 
 
 def gather_input():
@@ -51,17 +52,22 @@ def gather_input():
         input_args.set_scheme("http")
 
     # HTTPS connection
-    elif len(sys.argv) == 5:
-        ip_address = sys.argv[1]
-        port = sys.argv[2]
-        x509_path = sys.argv[3]
-        x509_private_key_path = sys.argv[4]
+    # Note: this section is commented out because of the requirements for the assignment
+    # elif len(sys.argv) == 5:
+    #     ip_address = sys.argv[1]
+    #     port = sys.argv[2]
+    #     x509_path = sys.argv[3]
+    #     x509_private_key_path = sys.argv[4]
 
-        input_args.set_ip_address(ip_address)
-        input_args.set_port(int(port))
-        input_args.set_scheme("https")
-        input_args.set_x509_path(x509_path)
-        input_args.set_x509_private_key_path(x509_private_key_path)
+    #     input_args.set_ip_address(ip_address)
+    #     input_args.set_port(int(port))
+    #     input_args.set_scheme("https")
+    #     input_args.set_x509_path(x509_path)
+    #     input_args.set_x509_private_key_path(x509_private_key_path)
+
+    #     if input_args.get_x509_path == "invalid" or input_args.get_x509_path_private_key == "invalid":
+    #         print_usage()
+    #         exit(1)
 
     # Improper arguments
     else:
@@ -73,9 +79,10 @@ def gather_input():
 
 def main():
     input_args = gather_input()
-    input_args.print_input_args()
+    Connection_Utils.start_server(input_args)
+    # input_args.print_input_args()
     # try:
-    #     Connection_Utils.start_server(args)
+    #     Connection_Utils.start_server(input_args)
     # except Exception:
     #     Response_Codes.respond_with_500()
 

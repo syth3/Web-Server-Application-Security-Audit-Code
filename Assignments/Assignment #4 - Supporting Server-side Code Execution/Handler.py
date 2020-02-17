@@ -18,22 +18,25 @@ def handler(sock):
     Nothing
     """
     response = ""
-    try:
-        request = Connection_Utils.get_request(sock)
-        parsed_request = HTTP_Parser.parse_request(request)
+    # try:
+    request = Connection_Utils.get_request(sock)
 
-        request_line = parsed_request["method"] + " " + parsed_request["request_uri"] + " " + parsed_request["http_version"]
-        log_data(request_line)
+    # The [2:-1] gets rid of the b'' around the request
+    parsed_request = HTTP_Parser.parse_request(request[2:-1])
 
-        # HTTP_Parser.print_parsed_request(parsed_request)
-        parsed_request.print_parsed_request()
+    request_line = parsed_request.get_method() + " " + parsed_request.get_request_uri() + " " + parsed_request.get_http_version()
+    log_data(request_line)
 
-        if parsed_request["response_code"] != 200:
-            response = return_http_code(parsed_request["response_code"])
-        else:
-            response = execute_method(parsed_request)
-    except Exception:
-        response = Response_Codes.respond_with_500()
+    # HTTP_Parser.print_parsed_request(parsed_request)
+    parsed_request.print_parsed_request()
+    print()
+
+    if parsed_request.get_response_code() != 200:
+        response = return_http_code(parsed_request.get_response_code())
+    else:
+        response = execute_method(parsed_request)
+    # except Exception:
+        # response = Response_Codes.respond_with_500()
 
     sock.send(response.encode())
     sock.close()
@@ -90,7 +93,7 @@ def execute_method(parsed_request):
         HTTP message to return to the client
     """
     response = ""
-    method = parsed_request["method"]
+    method = parsed_request.get_method()
     if method == "GET":
         response = Process_Request_Methods.process_GET(parsed_request)
     elif method == "POST":

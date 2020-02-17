@@ -1,0 +1,17 @@
+GET: DONE
+ - Get the contents of the file requested
+ - Send contents in body of 200 response
+
+POST: DONE
+ - process and do something with input parameters
+ - Input parameters should be sent to the endpoint specified in the request-uri
+
+PUT: DONE
+ - Create a file if not present
+ - If file present, replace the contents in it
+
+DELETE: DONE
+ - Delete the file specified
+
+HEAD: DONE
+ - Return some headers
