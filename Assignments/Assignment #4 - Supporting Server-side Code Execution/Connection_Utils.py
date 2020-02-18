@@ -45,7 +45,6 @@ def start_server(input_args):
 
     while True:
         conn_sock, addr = srv_sock.accept()
-        # conn_sock.send(Response_Codes.respond_with_200("").encode())
         if input_args.get_scheme() == "https":
             conn_sock = create_tls_socket(conn_sock, input_args.get_x509_path(), input_args.get_x509_private_key_path())
         t = threading.Thread(target=Handler.handler, args=(conn_sock,))

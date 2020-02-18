@@ -6,7 +6,12 @@ description: Functions to parse different HTTP methods
 '''
 
 import Response_Codes
+import PHP_Processing
 from pathlib import Path
+
+
+RESOURCES_DIR_NAME = "Resources"
+
 
 def process_GET(parsed_request):
     """Process a GET request by returning the contents of the resource requested 
@@ -21,22 +26,37 @@ def process_GET(parsed_request):
     string
         HTTP message to return to the client
     """
+    # Make default request-uri /index.html
     if parsed_request.get_request_uri() == "/":
         parsed_request.set_request_uri("/index.html")
 
-    curr_dir = Path.cwd()
-    file_name = Path(parsed_request.get_request_uri())
-    path = curr_dir / "Resources"
-    path = Path(str(path) + str(file_name))
+    # Parse request parameters out of the request-uri
+    request_uri = parsed_request.get_request_uri().split("?")[0]
+    request_params = ""
+    if len(parsed_request.get_request_uri().split("?")) > 1:
+        request_params = parsed_request.get_request_uri().split("?")[1]
 
+    # Assemble path to use to fetch the desired resource
+    curr_dir = Path.cwd()
+    file_name = Path(request_uri)
+    resources_dir = curr_dir / RESOURCES_DIR_NAME
+    path = Path(str(resources_dir) + str(file_name))
+
+    # Return 404 if file is not found
     if not path.exists():
         return Response_Codes.respond_with_404()
 
-    try:
-        path.open()
-    except PermissionError:
-        return Response_Codes.respond_with_403()
-    return Response_Codes.respond_with_200(path.read_text())
+    # Process PHP files
+    if path.suffix == ".php":
+        php_output_headers, php_output_body = PHP_Processing.process_php_file(request_uri, request_params, parsed_request.get_method(), resources_dir)
+        return Response_Codes.respond_with_200(php_output_body, additional_headers=php_output_headers)
+    # If not a PHP file, return contents of file requested
+    else:
+        try:
+            path.open()
+        except PermissionError:
+            return Response_Codes.respond_with_403()
+        return Response_Codes.respond_with_200(path.read_text())
 
 
 def process_POST(parsed_request):
@@ -82,12 +102,10 @@ def process_PUT(parsed_request):
     """
     curr_dir = Path.cwd()
     file_name = Path(parsed_request.get_request_uri())
-    path = curr_dir / "Resources"
+    path = curr_dir / RESOURCES_DIR_NAME
     path = Path(str(path) + str(file_name))
 
     if path.is_dir():
-        print("This is a dir:", path)
-        print(type(path))
         return Response_Codes.respond_with_404()
     
     body = parsed_request.get_body()
@@ -111,7 +129,7 @@ def process_DELETE(parsed_request):
     """
     curr_dir = Path.cwd()
     file_name = Path(parsed_request.get_request_uri())
-    path = curr_dir / "Resources"
+    path = curr_dir / RESOURCES_DIR_NAME
     path = Path(str(path) + str(file_name))
 
     if not path.exists():

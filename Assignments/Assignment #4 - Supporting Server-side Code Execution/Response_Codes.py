@@ -8,7 +8,7 @@ description: Response code functions
 from datetime import datetime
 
 
-def respond_with_200(body):
+def respond_with_200(body, additional_headers=None):
     """Return a HTTP 1.1 200 OK message
     
     Parameters
@@ -21,6 +21,10 @@ def respond_with_200(body):
     """
     response = "HTTP/1.1 200 OK\r\n"
     response += "Date: " + datetime.now().strftime('%a, %d %b %Y %I:%M:%S') + "\r\n"
+    response += "Content-Length: " + str(len(body)) + "\r\n"
+    if additional_headers != None:
+        for header in additional_headers:
+            response += header + "\r\n"
     response += "\r\n"
     response += body
     return response
