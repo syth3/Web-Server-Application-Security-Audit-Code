@@ -1,10 +1,13 @@
 GET: DONE
  - Get the contents of the file requested
+ - If it is a PHP file and there are request parameters, process PHP file
  - Send contents in body of 200 response
 
-POST: DONE
- - process and do something with input parameters
+POST: Almost
+ - If it is a PHP file, process it accordingly
+ - If not a PHP file, return the body and request-uri passed in
  - Input parameters should be sent to the endpoint specified in the request-uri
+ - Return 501 if Content-Type is not application/x-www-form-urlencoded
 
 PUT: DONE
  - Create a file if not present
