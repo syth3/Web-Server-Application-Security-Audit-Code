@@ -5,8 +5,8 @@ export SCRIPT_FILENAME="/home/jake/Documents/Web-Server-Application-Security-Aud
 export REQUEST_METHOD="POST"
 export SERVER_PROTOCOL="HTTP/1.1"
 export REMOTE_HOST="127.0.0.1"
-export CONTENT_LENGTH="29"
-export BODY="example1=Hello&example2=World"
+export CONTENT_LENGTH="24"
+export BODY="first=Allison&last=Brown"
 export CONTENT_TYPE="application/x-www-form-urlencoded"
 export "REDIRECT_STATUS"=0
 

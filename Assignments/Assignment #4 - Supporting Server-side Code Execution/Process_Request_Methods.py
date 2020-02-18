@@ -48,7 +48,8 @@ def process_GET(parsed_request):
 
     # Process PHP files
     if path.suffix == ".php":
-        php_output_headers, php_output_body = PHP_Processing.process_php_file(request_uri, request_params, parsed_request.get_method(), resources_dir)
+        php_output_headers, php_output_body = PHP_Processing.process_php_file(
+            request_uri, request_params, parsed_request.get_method(), resources_dir)
         return Response_Codes.respond_with_200(php_output_body, additional_headers=php_output_headers)
     # If not a PHP file, return contents of file requested
     else:
@@ -81,10 +82,20 @@ def process_POST(parsed_request):
     if not found_content_length:
         return Response_Codes.respond_with_411()
 
-    #Process POST request
-    return_body = "Body passed in:\n\t" + parsed_request.get_body() + "\nRequest-URI: " + parsed_request.get_request_uri()
-
-    return Response_Codes.respond_with_200(return_body)
+    # Process PHP
+    request_uri_path = Path(parsed_request.get_request_uri())
+    resources_dir = Path.cwd() / RESOURCES_DIR_NAME
+    if request_uri_path.suffix == ".php":
+        php_output_headers, php_output_body = PHP_Processing.process_php_file(
+            parsed_request.get_request_uri(), parsed_request.get_body(), parsed_request.get_method(), resources_dir)
+        return Response_Codes.respond_with_200(php_output_body, additional_headers=php_output_headers)
+    # Process POST request
+    else:
+        return_body = "Body passed in:\n\t" + \
+            parsed_request.get_body() + \
+            "\nRequest-URI: " + \
+            parsed_request.get_request_uri()
+        return Response_Codes.respond_with_200(return_body)
 
 
 def process_PUT(parsed_request):

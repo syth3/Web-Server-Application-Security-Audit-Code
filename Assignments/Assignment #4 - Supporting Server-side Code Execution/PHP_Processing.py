@@ -13,10 +13,9 @@ def process_php_file(request_uri, request_params, http_method, php_files_path):
             handle_get_environ_vars("", "", remove_vars=True)
         elif path.stem + path.suffix == request_uri.strip("/") and http_method == "POST":
             handle_post_environ_vars(path, request_params)
-            php_script_output = os.popen("php-cgi").read()
+            php_script_output = os.popen("echo $BODY | php-cgi").read()
             handle_post_environ_vars("", "", remove_vars=True)
     
-    #return "Request-URI: " + request_uri + "\nRequest Params: " + request_params
     return parse_php_output(php_script_output)
 
 
@@ -31,16 +30,34 @@ def find_php_file_path(file_name, php_files_path):
 
 
 def handle_post_environ_vars(script_path, request_params, remove_vars=False):
-    pass
+    if remove_vars:
+        os.environ.pop("GATEWAY_INTERFACE")
+        os.environ.pop("SCRIPT_FILENAME")
+        os.environ.pop("REQUEST_METHOD")
+        os.environ.pop("REDIRECT_STATUS")
+        os.environ.pop("SERVER_PROTOCOL")
+        os.environ.pop("REMOTE_HOST")
+        os.environ.pop("CONTENT_LENGTH")
+        os.environ.pop("BODY")
+        os.environ.pop("CONTENT_TYPE")
+    else:
+        os.environ["GATEWAY_INTERFACE"] = "CGI/1.1"
+        os.environ["SCRIPT_FILENAME"] = str(script_path)
+        os.environ["REQUEST_METHOD"] = "POST"
+        os.environ["SERVER_PROTOCOL"] = "HTTP/1.1"
+        os.environ["REMOTE_HOST"] = "127.0.0.1"
+        os.environ["CONTENT_LENGTH"] = str(len(request_params))
+        os.environ["BODY"] = request_params
+        os.environ["CONTENT_TYPE"] = "application/x-www-form-urlencoded"
+        os.environ["REDIRECT_STATUS"] = "0"
 
 
 def handle_get_environ_vars(script_path, query_string, remove_vars=False):
-    if remove_vars == True:
+    if remove_vars:
         os.environ.pop("QUERY_STRING")
         os.environ.pop("SCRIPT_FILENAME")
         os.environ.pop("REQUEST_METHOD")
         os.environ.pop("REDIRECT_STATUS")
-        return
     else:
         os.environ["QUERY_STRING"] = query_string
         os.environ["SCRIPT_FILENAME"] = str(script_path)
