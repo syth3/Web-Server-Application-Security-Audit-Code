@@ -4,3 +4,4 @@ output*
 .vscode
 *.txt
 !README.txt
+dontpush/
