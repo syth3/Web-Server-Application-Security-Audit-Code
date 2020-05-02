@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="tests/" tests="8" assertions="17" errors="0" failures="1" skipped="0" time="0.000922">
+    <testsuite name="apiMethodTests" file="/home/jake/Documents/csec731-jenkins-phpunit-assignment/tests/apiMethodTest.php" tests="6" assertions="15" errors="0" failures="0" skipped="0" time="0.000587">
+      <testcase name="testClassAttributes" class="apiMethodTests" classname="apiMethodTests" file="/home/jake/Documents/csec731-jenkins-phpunit-assignment/tests/apiMethodTest.php" line="11" assertions="5" time="0.000143"/>
+      <testcase name="testCreateMethod" class="apiMethodTests" classname="apiMethodTests" file="/home/jake/Documents/csec731-jenkins-phpunit-assignment/tests/apiMethodTest.php" line="23" assertions="3" time="0.000167"/>
+      <testcase name="testDelMethod" class="apiMethodTests" classname="apiMethodTests" file="/home/jake/Documents/csec731-jenkins-phpunit-assignment/tests/apiMethodTest.php" line="44" assertions="2" time="0.000101"/>
+      <testcase name="testDelMethod404" class="apiMethodTests" classname="apiMethodTests" file="/home/jake/Documents/csec731-jenkins-phpunit-assignment/tests/apiMethodTest.php" line="59" assertions="2" time="0.000040"/>
+      <testcase name="testViewMethod" class="apiMethodTests" classname="apiMethodTests" file="/home/jake/Documents/csec731-jenkins-phpunit-assignment/tests/apiMethodTest.php" line="69" assertions="1" time="0.000098"/>
+      <testcase name="testViewMethod404" class="apiMethodTests" classname="apiMethodTests" file="/home/jake/Documents/csec731-jenkins-phpunit-assignment/tests/apiMethodTest.php" line="85" assertions="2" time="0.000038"/>
+    </testsuite>
+    <testsuite name="apiSecurityTests" file="/home/jake/Documents/csec731-jenkins-phpunit-assignment/tests/apiSecurityTest.php" tests="2" assertions="2" errors="0" failures="1" skipped="0" time="0.000335">
+      <testcase name="testCommandInjection" class="apiSecurityTests" classname="apiSecurityTests" file="/home/jake/Documents/csec731-jenkins-phpunit-assignment/tests/apiSecurityTest.php" line="7" assertions="1" time="0.000198"/>
+      <testcase name="testDirectoryTraversal" class="apiSecurityTests" classname="apiSecurityTests" file="/home/jake/Documents/csec731-jenkins-phpunit-assignment/tests/apiSecurityTest.php" line="14" assertions="1" time="0.000137">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">apiSecurityTests::testDirectoryTraversal
+Failed asserting that two strings are equal.
+--- Expected
++++ Actual
+@@ @@
+-'/home/jake/Documents/csec731-jenkins-phpunit-assignment/test-output-files/../../../../../../../../../../../etc/passwd'
++'/home/jake/Documents/csec731-jenkins-phpunit-assignment/test-output-files/..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2Fetc%2Fpasswd'
+
+/home/jake/Documents/csec731-jenkins-phpunit-assignment/tests/apiSecurityTest.php:17
+</failure>
+      </testcase>
+    </testsuite>
+  </testsuite>
+</testsuites>
