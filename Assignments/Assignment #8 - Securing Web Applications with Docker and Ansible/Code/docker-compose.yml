@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+    webserver:
+        build: ./builds/webserver
+        container_name: webserver
+        ports:
+            - '8080:80'
+            - '8443:443'
+            # - '2222:22'
