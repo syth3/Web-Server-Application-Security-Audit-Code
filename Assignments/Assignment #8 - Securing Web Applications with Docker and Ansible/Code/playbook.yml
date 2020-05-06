@@ -27,21 +27,46 @@
       pip:
         name: docker
     
-    - name: upload the docker-related files to the docker host
+    - name: Upload the docker-related files to the docker host
       copy: src=docker dest=/tmp
     
-    - name: build webserver
+    - name: Build webserver
       docker_image:
         name: webserver
-        build: path=/tmp/docker/webserver pull=no
+        build: path=/tmp/docker/webserver pull=yes
         source: build
     
-    - name: run webserver
+    - name: Build Modsecurity server
+      docker_image:
+        name: modsecurity
+        build: path=/tmp/docker/modsecurity pull=yes
+        source: build
+      
+    - name: Create docker network for the webserver and modsecurity machines to talk over
+      docker_network:
+        name: secure-web-net
+        
+    - name: Run webserver
       docker_container:
         name: webserver
         image: webserver
+        restart_policy: always
         published_ports: 
           - "8080:80"
           - "8443:443"
+        networks_cli_compatible: yes
+        networks:
+          - name: secure-web-net
+    
+    - name: Run Modsecurity server
+      docker_container:
+        name: modsecurity
+        image: modsecurity
+        restart_policy: always
+        published_ports:
+          - "80:80"
+        networks_cli_compatible: yes
+        networks:
+          - name: secure-web-net
     
     
