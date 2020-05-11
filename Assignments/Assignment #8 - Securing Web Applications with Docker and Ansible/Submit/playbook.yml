@@ -1,0 +1,72 @@
+---
+- hosts: all
+  become: true
+
+  tasks:
+    - name: Install aptitude using apt
+      apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
+
+    - name: Install required system packages
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt: update_cache=yes name=docker-ce state=latest
+
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+    
+    - name: Upload the docker-related files to the docker host
+      copy: src=docker dest=/tmp
+    
+    - name: Build webserver
+      docker_image:
+        name: webserver
+        build: path=/tmp/docker/webserver pull=yes
+        source: build
+    
+    - name: Build Modsecurity server
+      docker_image:
+        name: modsecurity
+        build: path=/tmp/docker/modsecurity pull=yes
+        source: build
+      
+    - name: Create docker network for the webserver and modsecurity machines to talk over
+      docker_network:
+        name: secure-web-net
+        
+    - name: Run webserver
+      docker_container:
+        name: webserver
+        image: webserver
+        restart_policy: always
+        published_ports: 
+          - "8080:80"
+          - "8443:443"
+        networks_cli_compatible: yes
+        networks:
+          - name: secure-web-net
+    
+    - name: Run Modsecurity server
+      docker_container:
+        name: modsecurity
+        image: modsecurity
+        restart_policy: always
+        published_ports:
+          - "80:80"
+        networks_cli_compatible: yes
+        networks:
+          - name: secure-web-net
+    
+    
